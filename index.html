@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ARIAM PU Control</title>
+<meta name="description" content="Controle de processo de injeção PU · ARIAM Londrina">
+<meta name="theme-color" content="#1F3A5F">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icones/favicon.png">
+<link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="App Ariam">
+<style>
+  html, body { margin: 0; height: 100%; background: #F7F5F0; overflow: hidden; }
+  iframe { position: fixed; inset: 0; width: 100%; height: 100%; border: 0;
+           padding-top: env(safe-area-inset-top); box-sizing: border-box; background: #F7F5F0; }
+  #abertura { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+              gap: 18px; background: #1F3A5F; color: #EEF2F7; font: 500 15px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+              transition: opacity .4s; z-index: 2; }
+  #abertura img { width: 96px; height: 96px; border-radius: 22px; }
+  #abertura small { color: #B8C4D4; }
+  #abertura a { color: #C9A24A; }
+  .oculto { opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="abertura">
+  <img src="icones/icone-192.png" alt="">
+  <div>App Ariam</div>
+  <small id="msg">Abrindo…</small>
+</div>
+<iframe id="app" title="ARIAM PU Control" allow="camera; microphone; clipboard-read; clipboard-write; fullscreen"
+        src="https://ariam-pu.streamlit.app/?embed=true&embed_options=light_theme"></iframe>
+<script>
+  const abertura = document.getElementById("abertura");
+  document.getElementById("app").addEventListener("load", () => setTimeout(() => abertura.classList.add("oculto"), 600));
+  // o servidor gratuito "dorme" sem uso: avisa se a primeira abertura demorar
+  setTimeout(() => {
+    if (!abertura.classList.contains("oculto")) {
+      document.getElementById("msg").innerHTML = 'Acordando o servidor, pode levar até 1 minuto…<br>' +
+        '<a href="https://ariam-pu.streamlit.app/" target="_blank" rel="noopener">abrir no navegador</a>';
+    }
+  }, 12000);
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+</script>
+</body>
+</html>
